@@ -58,7 +58,7 @@ const App = () => {
 
   // Cargar datos desde Supabase
 const cargarClientes = async () => {
-  const { data, error } = await supabase
+  const { data: clientesData, error } = await supabase
     .from('clientes')
     .select('*')
     .order('fecha_creacion', { ascending: false });
@@ -68,8 +68,9 @@ const cargarClientes = async () => {
     return;
   }
   
-  setClientes(data || []);
+  setClientes(clientesData || []);
 };
+
 
 
   const cargarTransacciones = async () => {
