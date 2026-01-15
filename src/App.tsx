@@ -71,20 +71,20 @@ const cargarClientes = async () => {
   setClientes(clientesData || []);
 };
 
+const cargarTransacciones = async () => {
+  const { data: transaccionesData, error } = await supabase
+    .from('transacciones')
+    .select('*')
+    .order('fecha', { ascending: false });
 
+  if (error) {
+    console.error('Error cargando transacciones:', error);
+    return;
+  }
+  
+  setTransacciones(transaccionesData || []);
+};
 
-  const cargarTransacciones = async () => {
-    const { data, error } = await supabase
-      .from('transacciones')
-      .select('*')
-      .order('fecha', { ascending: false });
-
-    if (error) {
-      console.error('Error cargando transacciones:', error);
-    } else {
-      setTransacciones(data || []);
-    }
-  };
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -97,26 +97,28 @@ const cargarClientes = async () => {
   }, []);
 
   // Funciones de Cliente
-  const agregarCliente = async () => {
-    if (!formCliente.nombre || !formCliente.apellido || !formCliente.dni) {
-      alert('Por favor complete los campos obligatorios');
-      return;
-    }
+const agregarCliente = async () => {
+  if (!formCliente.nombre || !formCliente.apellido || !formCliente.dni) {
+    alert('Por favor complete los campos obligatorios');
+    return;
+  }
 
-    const { data, error } = await supabase
-      .from('clientes')
-      .insert([formCliente])
-      .select();
+  const { error } = await supabase
+    .from('clientes')
+    .insert([formCliente])
+    .select();
 
-    if (error) {
-      console.error('Error agregando cliente:', error);
-      alert('Error al agregar cliente');
-    } else {
-      await cargarClientes();
-      setFormCliente({ nombre: '', apellido: '', dni: '', telefono: '' });
-      setMostrarFormCliente(false);
-    }
-  };
+  if (error) {
+    console.error('Error agregando cliente:', error);
+    alert('Error al agregar cliente');
+    return;
+  }
+  
+  await cargarClientes();
+  setFormCliente({ nombre: '', apellido: '', dni: '', telefono: '' });
+  setMostrarFormCliente(false);
+};
+
 
   const actualizarCliente = async () => {
     if (!editando) return;
