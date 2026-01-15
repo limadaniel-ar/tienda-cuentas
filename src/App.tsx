@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Bell, TrendingUp, Search, X, Edit2, Trash2, ArrowLeft, AlertCircle } from 'lucide-react';
 import { supabase } from './supabaseClient';
 
@@ -57,18 +57,20 @@ const App = () => {
   });
 
   // Cargar datos desde Supabase
-  const cargarClientes = async () => {
-    const { data, error } = await supabase
-      .from('clientes')
-      .select('*')
-      .order('fecha_creacion', { ascending: false });
+const cargarClientes = async () => {
+  const { data, error } = await supabase
+    .from('clientes')
+    .select('*')
+    .order('fecha_creacion', { ascending: false });
 
-    if (error) {
-      console.error('Error cargando clientes:', error);
-    } else {
-      setClientes(data || []);
-    }
-  };
+  if (error) {
+    console.error('Error cargando clientes:', error);
+    return;
+  }
+  
+  setClientes(data || []);
+};
+
 
   const cargarTransacciones = async () => {
     const { data, error } = await supabase
